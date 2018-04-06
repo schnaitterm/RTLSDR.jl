@@ -71,20 +71,27 @@ function read_samples(r::RtlSdr, num_samples)
 	raw_data = read_bytes(r.dongle_ptr, num_bytes)
 	return packed_bytes_to_iq(raw_data)
 end
+# function packed_bytes_to_iq(bytes)
+# 	num_bytes = length(bytes)
+# 	num_iq = round(Int, num_bytes/2.0, RoundDown)
+# 	iq_vals = zeros(Complex{Float64}, num_iq)
+# 	den = 255.0/2.0
+#
+# 	for i = 1:num_iq
+# 		iq_vals[i] = bytes[2i-1]/den - 1.0 + im*(bytes[2i]/den - 1.0)
+# 	end
+#
+# 	return iq_vals
+# end
+
 function packed_bytes_to_iq(bytes)
 	num_bytes = length(bytes)
-	num_iq = round(Int, num_bytes/2.0, RoundDown)
-	iq_vals = zeros(Complex{Float64}, num_iq)
-	den = 255.0/2.0
-
-	for i = 1:num_iq
-		iq_vals[i] = bytes[2i-1]/den - 1.0 + im*(bytes[2i]/den - 1.0)
-	end
-
+	bytes_signed = Array{Int8,1}(bytes .- 128) #convert to signed integer [-128,128]
+	iq_vals = complex(bytes[1:2:num_bytes],bytes[2:2:num_bytes])
 	return iq_vals
 end
 
-# maximum 
+# maximum
 function get_strength(r::RtlSdr, n=10; plot_max::Bool=false)
 	max_sample = -Inf
 	max_p = 0
@@ -101,7 +108,7 @@ function get_strength(r::RtlSdr, n=10; plot_max::Bool=false)
 		#samples = read_samples(r, 256*50)
 		p = welch_pgram(samples, fs=sample_rate)
 		temp_max = maximum(p.power)
-		if temp_max > max_sample 
+		if temp_max > max_sample
 			max_sample = temp_max
 			max_p = deepcopy(p)
 		end
@@ -134,7 +141,7 @@ function get_strength2(r::RtlSdr, n=10; plot_max::Bool=false)
 		# taking spectrum max...
 		temp_max = sum(pows)
 
-		if temp_max > max_sample 
+		if temp_max > max_sample
 			max_sample = temp_max
 			max_p = deepcopy(p)
 			max_pows = deepcopy(pows)
