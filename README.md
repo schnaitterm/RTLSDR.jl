@@ -20,7 +20,7 @@ get_rate(r)
 close(r)
 ```
 
-[![Build Status](https://travis-ci.org/schnaitterm/RTLSDR.jl.svg?branch=master)](https://travis-ci.org/dressel/RTLSDR.jl)
+[![Build Status](https://travis-ci.org/schnaitterm/RTLSDR.jl.svg?branch=master)](https://travis-ci.org/schnaitterm/RTLSDR.jl)
 
 [![Coverage Status](https://coveralls.io/repos/schnaitterm/RTLSDR.jl/badge.svg?branch=master&service=github)](https://coveralls.io/github/schnaitterm/RTLSDR.jl?branch=master)
 
